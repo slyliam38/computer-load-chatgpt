@@ -11,6 +11,7 @@
 - Refresh MCP SDK and affected transitive dependencies before public release.
 - Use POSIX path fixtures when testing macOS process policy on Windows.
 - Keep the Python worker's JSON pipes in UTF-8 on Windows legacy code pages.
+- Read source package metadata as UTF-8 on every platform.
 - Document executable permission for the downloaded macOS launcher.
 
 Publishing a CI workflow is not a passed CI run. Native chat rendering and
