@@ -44,8 +44,8 @@ def build_archive(root, target):
     for required in ("LICENSE", "README.md", "package.json", "plugin.json"):
         if not (root / required).is_file():
             raise ValueError("Missing required release file: " + required)
-    package = json.loads((root / "package.json").read_text())
-    plugin = json.loads((root / "plugin.json").read_text())
+    package = json.loads((root / "package.json").read_text(encoding="utf-8"))
+    plugin = json.loads((root / "plugin.json").read_text(encoding="utf-8"))
     if package["version"] != plugin["version"]:
         raise ValueError("Package and plugin versions differ")
     files = public_files(root)
@@ -58,7 +58,7 @@ def build_archive(root, target):
 
 def main():
     root = Path(__file__).resolve().parents[1]
-    version = json.loads((root / "package.json").read_text())["version"]
+    version = json.loads((root / "package.json").read_text(encoding="utf-8"))["version"]
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=root / "dist" / f"computer-load-chatgpt-{version}.zip")
     args = parser.parse_args()
