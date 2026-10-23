@@ -1,4 +1,5 @@
 import contextlib
+import json
 import ntpath
 import os
 import sys
@@ -149,6 +150,19 @@ class ConfirmationTests(unittest.TestCase):
         finally:
             if child.poll() is None: child.terminate()
             child.wait(timeout=5)
+
+
+class WorkerProtocolTests(unittest.TestCase):
+    def test_utf8_protocol_with_legacy_stdio_encoding(self):
+        worker = Path(__file__).resolve().parents[1] / "agent" / "worker.py"
+        request = json.dumps({"id": "замер", "op": "unsupported"}, ensure_ascii=False) + "\n"
+        env = dict(os.environ, PYTHONIOENCODING="cp1252", PYTHONUTF8="0")
+        result = subprocess.run([sys.executable, str(worker)], input=request.encode("utf-8"),
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr.decode("utf-8", errors="replace")[:240])
+        response = json.loads(result.stdout.decode("utf-8"))
+        self.assertEqual(response["id"], "замер")
+        self.assertEqual(response["error"], "Неизвестная операция.")
 
 
 class InterpretationTests(unittest.TestCase):
