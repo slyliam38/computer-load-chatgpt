@@ -10,6 +10,11 @@ const agent = new Agent(ROOT);
 const servers = await startLocal(agent, {mcpPort:18997,localPort:18998});
 const client = new Client({name:'computer-load-verification',version:'0.1.0'});
 const transport = new StreamableHTTPClientTransport(new URL('http://127.0.0.1:18997/mcp'));
+function safeToolError(result) {
+  const text = result.content?.find(part => part.type === 'text')?.text;
+  if (typeof text !== 'string') return 'no error detail';
+  return text.replace(/[A-Za-z]:[\\/][^\s]+|\/(?:Users|home)\/[^\s]+/g, '<private-path>').replace(/\s+/g, ' ').slice(0, 240);
+}
 try {
   await client.connect(transport);
   const {tools} = await client.listTools();
@@ -17,7 +22,7 @@ try {
   assert.equal(tools.some(t=>/execute|confirm|kill|shell/.test(t.name)),false);
   assert.equal(tools.find(t=>t.name==='prepare_process_stop').annotations.readOnlyHint,false);
   const scan = await client.callTool({name:'diagnose_computer',arguments:{seconds:2,limit:20}});
-  assert.equal(scan.isError,undefined);
+  assert.equal(scan.isError,undefined,`diagnose_computer failed: ${safeToolError(scan)}`);
   const data = scan.structuredContent;
   assert.ok(data.snapshot_id);
   assert.equal(data.cpu.samples_percent.length,2);
