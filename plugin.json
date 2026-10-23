@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "computer-load",
+  "version": "0.1.4",
+  "description": "Диагностика нагрузки macOS и Windows с локальным подтверждением закрытия приложений.",
+  "keywords": [
+    "computer",
+    "diagnostics",
+    "macos",
+    "windows"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Что нагружает компьютер",
+        "shortDescription": "Процессор, память, диск и безопасные рекомендации",
+        "longDescription": "Короткие замеры без чтения файлов. Закрытие выбранного приложения требует подтверждения на компьютере.",
+        "developerName": "Lev Stepanov",
+        "category": "Productivity",
+        "capabilities": [
+          "Read",
+          "Write"
+        ],
+        "brandColor": "#295BC4",
+        "defaultPrompt": [
+          "Проверь, что сейчас нагружает мой компьютер.",
+          "Почему компьютер тормозит и какие приложения можно закрыть?"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "computer-load-chatgpt",
+  "version": "0.1.4",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "start": "node server/main.mjs",
+    "stdio": "node server/main.mjs --stdio",
+    "check": "node --check server/main.mjs && node --check server/agent.mjs && node --check public/widget.mjs",
+    "test": "node scripts/test.mjs",
+    "verify": "node scripts/verify.mjs",
+    "verify:stdio": "node scripts/verify-stdio.mjs",
+    "pack:source": "node scripts/package.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "2.0.3",
+    "@modelcontextprotocol/sdk": "1.31.0",
+    "zod": "^4.2.0"
+  },
+  "devDependencies": {
+    "jsdom": "26.1.0"
+  },
+  "description": "Local-first computer diagnostics MCP plugin with an interactive dashboard and human-confirmed app closing.",
+  "license": "MIT",
+  "author": "Lev Stepanov",
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-apps",
+    "diagnostics",
+    "macos",
+    "windows",
+    "chatgpt",
+    "codex"
+  ]
+}
