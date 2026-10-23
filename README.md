@@ -42,6 +42,9 @@ Open **http://127.0.0.1:8798** and choose the diagnosis button. Keep the termina
 open while using the agent. Alternatively, launch `Start-macOS.command` or
 `Start-Windows.cmd`; the first launch prepares project-local dependencies.
 
+If the macOS launcher was downloaded without execute permission, run
+`chmod +x Start-macOS.command` from the project directory before opening it.
+
 The standalone panel works without an AI account or API key. Exporting its JSON
 report and sharing that report is a separate user action. Installation downloads
 dependencies; normal sampling does not call an external API.
