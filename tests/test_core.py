@@ -5,12 +5,18 @@ import sys
 import subprocess
 import time
 import unittest
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "agent"))
 import core
 import psutil
+
+
+class DarwinPath(PurePosixPath):
+    @classmethod
+    def home(cls):
+        return cls("/Users/person")
 
 
 def info(**changes):
@@ -22,6 +28,9 @@ def info(**changes):
 
 class PolicyTests(unittest.TestCase):
     def classify(self, value, system="Darwin"):
+        if system == "Darwin":
+            with patch.object(core, "Path", DarwinPath):
+                return core.policy(value, owner="person", system=system, protected_pids={777})["mode"]
         return core.policy(value, owner="person", system=system, protected_pids={777})["mode"]
 
     def test_only_known_media_main_binary_allowed(self):
@@ -42,7 +51,7 @@ class PolicyTests(unittest.TestCase):
 
     def test_windows_exact_media_path(self):
         with patch.dict(os.environ, {"ProgramFiles": r"C:\Program Files", "APPDATA": r"C:\Users\person\AppData\Roaming"}):
-            # Host-independent path construction: policy uses the executing OS's separator.
+            # Windows path construction is host-independent.
             exe = ntpath.join(os.environ["ProgramFiles"], "VideoLAN", "VLC", "vlc.exe")
             self.assertEqual(self.classify(info(name="vlc.exe", exe=exe), "Windows"), "confirm")
             self.assertEqual(self.classify(info(name="VLC.EXE", exe=exe.lower()), "Windows"), "confirm")
