@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Что нагружает компьютер</title>
+  <style>
+    :root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; --bg:#f4f6fa; --panel:#fff; --ink:#17243a; --muted:#67758b; --line:#e2e8f1; --blue:#295bc4; --soft:#edf2ff; --green:#19735d; }
+    * { box-sizing:border-box } body { margin:0; background:var(--bg); color:var(--ink); padding:28px 22px; } main { max-width:1080px; margin:auto; }
+    header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:22px; } .eyebrow { font-size:11px; font-weight:700; letter-spacing:.1em; color:var(--blue); text-transform:uppercase; margin:0 0 8px; } h1 { margin:0; font-size:clamp(23px,4vw,34px); letter-spacing:-.035em; } .subtitle { color:var(--muted); font-size:14px; line-height:1.6; margin:9px 0 0; max-width:690px; }
+    button { cursor:pointer; border:1px solid var(--line); border-radius:10px; padding:10px 14px; background:var(--panel); color:var(--ink); font:inherit; font-size:13px; font-weight:600; } button.primary { background:var(--blue); color:white; border-color:var(--blue); white-space:nowrap; } button:disabled { opacity:.5; cursor:wait; } button:focus-visible, input:focus-visible { outline:3px solid #90b4ff; outline-offset:3px; }
+    .status { display:inline-flex; align-items:center; gap:7px; color:var(--muted); font-size:12px; margin:4px 0 17px; } .dot { width:7px; height:7px; border-radius:50%; background:var(--muted); } .status[data-level=normal] { color:var(--green); } .status[data-level=normal] .dot { background:var(--green); } .status[data-level=watch] { color:#a36816; } .status[data-level=watch] .dot { background:#a36816; } .status[data-level=high] { color:#b53f37; } .status[data-level=high] .dot { background:#b53f37; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; } .metric { background:var(--panel); border:1px solid var(--line); border-radius:15px; padding:18px; min-height:130px; } .label { color:var(--muted); font-size:12px; } .value { font-size:28px; letter-spacing:-.04em; font-weight:650; margin:12px 0 8px; } .description { color:var(--muted); font-size:12px; line-height:1.5; } .track { height:4px; background:var(--line); border-radius:5px; margin-top:12px; overflow:hidden; } .fill { height:100%; background:var(--blue); width:0; }
+    .panel { border:1px solid var(--line); border-radius:16px; background:var(--panel); padding:20px; margin-top:16px; } .panel-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:14px; } h2 { font-size:17px; margin:0; letter-spacing:-.02em; } .hint { font-size:12px; color:var(--muted); line-height:1.6; } .findings { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; } .finding { border-left:3px solid #80a2db; padding-left:14px; } .finding[data-level=high] { border-color:#c76c5b; } .finding[data-level=normal] { border-color:#69a593; } .finding h3 { font-size:14px; margin:0 0 7px; } .finding p { margin:0; font-size:13px; color:var(--muted); line-height:1.6; }
+    .table-wrap { overflow-x:auto; } table { width:100%; border-collapse:collapse; font-size:13px; } th { text-align:left; font-size:11px; color:var(--muted); font-weight:500; padding:10px 10px; border-bottom:1px solid var(--line); } td { padding:13px 10px; border-bottom:1px solid var(--line); vertical-align:middle; } tr:last-child td { border:0; } th:first-child,td:first-child { padding-left:0; } .name { font-weight:600; overflow-wrap:anywhere; } .pid { color:var(--muted); font-size:11px; margin-top:3px; } .num { font-variant-numeric:tabular-nums; white-space:nowrap; } .action-note { font-size:11px; color:var(--muted); max-width:280px; line-height:1.5; } .tabs { display:flex; gap:6px; } .tabs button { padding:6px 11px; font-size:12px; } .tabs button[aria-pressed=true] { background:var(--soft); border-color:transparent; color:var(--blue); }
+    .empty { text-align:center; padding:35px 20px; color:var(--muted); font-size:14px; line-height:1.8; } #message { font-size:13px; line-height:1.6; padding:12px 15px; margin:14px 0; border-radius:10px; background:var(--soft); color:var(--ink); overflow-wrap:anywhere; } #message:empty { display:none; } #message[data-error=true] { background:#ffece7; color:#913629; }
+    #approvals[hidden] { display:none; } .proposal { border:1px solid var(--line); padding:16px; border-radius:12px; margin-top:12px; } .proposal h3 { font-size:15px; margin:0 0 8px; } .proposal p { font-size:13px; color:var(--muted); line-height:1.6; } .proposal input[type=text] { border:1px solid var(--line); border-radius:8px; padding:10px; background:var(--panel); color:var(--ink); font:inherit; width:100%; max-width:320px; display:block; margin:10px 0; } .check { display:block; font-size:13px; margin:12px 0; } .proposal button { color:#a43a31; } footer { display:flex; gap:16px; justify-content:space-between; font-size:11px; line-height:1.6; color:var(--muted); margin:20px 2px; } .report-note { margin-top:12px; } .export { font-size:12px; padding:7px 11px; }
+    @media(max-width:680px) { body { padding:20px 14px; } header { align-items:flex-start; flex-direction:column; } .metrics { grid-template-columns:repeat(2,1fr); } .metric { padding:15px; } .panel { padding:16px; } .panel-heading { flex-wrap:wrap; } footer { flex-direction:column; gap:4px; } }
+    @media(prefers-color-scheme:dark) { :root { --bg:#151922; --panel:#1e2430; --ink:#e6ebf4; --muted:#a3afc2; --line:#343e50; --blue:#719cf7; --soft:#2a3652; --green:#78cbb0; } button.primary { color:#101a2e; } #message[data-error=true] { background:#472e2b; color:#ffd2c5; } }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><p class="eyebrow">Диагностика по запросу · macOS + Windows</p><h1>Что нагружает компьютер</h1><p class="subtitle">Короткий замер ресурсов и понятные рекомендации. Закрытие приложения — только после вашего подтверждения на компьютере.</p></div>
+    <button class="primary" id="scan">Проверить сейчас</button>
+  </header>
+  <div class="status" id="status"><span class="dot"></span><span id="status-text">Готов к проверке · замер 3 секунды</span></div>
+  <section class="metrics" aria-label="Ресурсы компьютера">
+    <div class="metric"><div class="label">Процессор</div><div class="value" id="cpu-value">—</div><div class="description" id="cpu-detail">Средняя загрузка всех ядер</div><div class="track"><div class="fill" id="cpu-fill"></div></div></div>
+    <div class="metric"><div class="label">Память</div><div class="value" id="memory-value">—</div><div class="description" id="memory-detail">Доступная память и swap</div><div class="track"><div class="fill" id="memory-fill"></div></div></div>
+    <div class="metric"><div class="label">Свободно на диске</div><div class="value" id="disk-value">—</div><div class="description" id="disk-detail">Системный диск</div><div class="track"><div class="fill" id="disk-fill"></div></div></div>
+    <div class="metric"><div class="label">Сеть · приём / передача</div><div class="value" id="network-value">—</div><div class="description" id="network-detail">Общий трафик за время замера</div></div>
+  </section>
+  <div id="message" role="status" aria-live="polite"></div>
+  <section class="panel"><div class="panel-heading"><h2>Что стоит проверить</h2><button class="export" id="export" disabled>Скачать отчёт</button></div><div class="findings" id="findings"><div class="hint">Нажмите «Проверить сейчас». Агент ничего не останавливает во время диагностики.</div></div></section>
+  <section class="panel">
+    <div class="panel-heading"><div><h2>Процессы с заметным расходом ресурсов</h2><div class="hint">CPU: 100% = одно занятое ядро. На нескольких ядрах значение может быть выше 100%.</div></div><div class="tabs"><button id="sort-cpu" aria-pressed="true">По CPU</button><button id="sort-memory" aria-pressed="false">По памяти</button></div></div>
+    <div class="table-wrap"><table><thead><tr><th>Процесс</th><th>CPU</th><th>Память RSS</th><th>Диск · чтение / запись</th><th>Что можно сделать</th></tr></thead><tbody id="processes"><tr><td colspan="5" class="empty">Здесь появятся результаты замера.</td></tr></tbody></table></div>
+    <div class="hint report-note" id="coverage">Системные службы, 1С, базы данных, резервное копирование и неизвестные процессы защищены от завершения через агент.</div>
+  </section>
+  <section class="panel" id="approvals" hidden><div class="panel-heading"><div><h2>Подтверждение на этом компьютере</h2><div class="hint">Запрос действует 60 секунд. Перед закрытием сохраните работу.</div></div><button id="pending-refresh">Обновить запросы</button></div><div id="proposals"></div></section>
+  <footer><span>В отчёт входят показатели ресурсов, имена процессов и PID. Содержимое файлов и аргументы команд не собираются.</span><span>Короткий замер · без проверки вирусов, GPU и температуры</span></footer>
+</main>
+<script type="module" src="/widget.mjs"></script>
+</body>
+</html>
