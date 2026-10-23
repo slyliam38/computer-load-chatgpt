@@ -3,6 +3,11 @@ import json
 import sys
 from core import Session, sample, PROCESS_ERRORS
 
+# Node's child-process pipes carry UTF-8 JSON. Windows may otherwise select a
+# legacy code page for redirected stdio, which cannot encode Russian responses.
+sys.stdin.reconfigure(encoding="utf-8")
+sys.stdout.reconfigure(encoding="utf-8")
+
 session = Session()
 
 def dispatch(op, args):
