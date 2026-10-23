@@ -1,0 +1,10 @@
+{
+  "name": "computer-load-local",
+  "interface": {"displayName": "Локальная диагностика компьютера"},
+  "plugins": [{
+    "name": "computer-load",
+    "source": {"source": "local", "path": "./"},
+    "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
+    "category": "Productivity"
+  }]
+}
